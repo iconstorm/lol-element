@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍩 Testing</title>
+</head>
+<body>
+  <script type="module">
+    import { LolElement, define, html, css } from './src/main.js'
+
+    const template = ({ name, handleClick }) => html`
+      <p>
+        <mark>Hello, ${name}</mark> 
+        <button @click=${handleClick}>Log</button>
+      </p>
+    `
+
+    const styles = css`
+      :host { --color: lime; }
+      p { font-size: 150%; }
+      mark { color: var(--color, lime); }
+    `
+
+    const definition = {
+      name: 'a-test',
+      attributes: ['name'],
+      template,
+      styles
+    }
+
+    class Hello extends LolElement {
+      handleClick () {
+        console.log(this.name)
+      }
+    }
+
+    define(Hello, definition)
+  </script>
+
+  <a-test name="Pear" style="--color: red"></a-test>
+  <a-test name="Banana" style="--color: black"></a-test>
+  <a-test name="Apple"></a-test>
+
+  <footer>OK</footer>
+</body>
+</html>
