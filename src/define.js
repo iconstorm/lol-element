@@ -1,9 +1,12 @@
 export function define (Component, definition) {
   definition = definition || Component.definition
 
-  if (!definition) throw new Error('`definition` missing')
-  if (!definition.name) throw new Error('Element name missing')
-
+  if (!definition) {
+    throw new Error(`'definition' object missing: ${Component.name}.`)
+  }
+  if (!definition.name) {
+    throw new Error(`A name for the custom element is missing in the 'definition' object: ${Component.name}.`)
+  }
   if (typeof definition.shadowOptions === 'undefined') {
     definition.shadowOptions = { mode: 'open' }
   }
@@ -12,7 +15,6 @@ export function define (Component, definition) {
     Component,
     definition.attributes
   )
-
   Object.defineProperty(Component, 'observedAttributes', {
     get () { return attributes.map(x => x.name) }
   })

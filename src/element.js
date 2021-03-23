@@ -4,7 +4,7 @@ import { define } from './define.js'
 
 export class LolElement extends LolElementLogic {
   /**
-   * Warning: when no shadowRoot is present, there is no "cleaning up",
+   * Warning: when no shadowRoot is present, there is no "cleaning up":
    * styles are added and they stay forever
    */
   _adoptStyles () {
@@ -12,6 +12,7 @@ export class LolElement extends LolElementLogic {
     if (styles == null) return
     const hasShadowRoot = this.shadowRoot !== null
     const styleSheet = styles.styleSheet
+
     // Constructable Stylesheets supported
     if (styleSheet !== null && hasShadowRoot) {
       this.shadowRoot.adoptedStyleSheets = [styleSheet]
@@ -22,6 +23,7 @@ export class LolElement extends LolElementLogic {
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, styleSheet]
       return
     }
+
     // No support
     const styleTag = document.createElement('style')
     styleTag.textContent = styles
