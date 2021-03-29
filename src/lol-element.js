@@ -1,8 +1,8 @@
 // @ts-check
 
+import { LolElementBase } from './element.js'
 import { render } from '../node_modules/lit-html/lit-html.js'
 
-import { LolElementBase } from './element.js'
 export { css } from './css.js'
 export { html, svg } from '../node_modules/lit-html/lit-html.js'
 
