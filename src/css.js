@@ -1,5 +1,7 @@
+// @ts-check
+
 /**
- * Adopted from `lit-element`
+ * Adapted from `lit-element`
  *
  * @license
  * Copyright (c) 2019 The Polymer Project Authors. All rights reserved.
@@ -17,7 +19,11 @@ export const supportsAdoptingStyleSheets = window.ShadowRoot &&
 
 const constructionToken = Symbol('styles')
 
-class CSSResult {
+export class CSSResult {
+  /**
+   * @param {string} cssText
+   * @param {Symbol} safeToken
+   */
   constructor (cssText, safeToken) {
     if (safeToken !== constructionToken) {
       throw new Error('CSSResult is not constructable, use `css` instead.')
@@ -34,6 +40,7 @@ class CSSResult {
     if (this._styleSheet === undefined) {
       if (supportsAdoptingStyleSheets) {
         this._styleSheet = new CSSStyleSheet()
+        // @ts-ignore
         this._styleSheet.replaceSync(this.cssText)
       } else {
         this._styleSheet = null
@@ -43,10 +50,18 @@ class CSSResult {
   }
 
   toString () {
+    // @ts-ignore
     return this.cssText
   }
 }
 
+/**
+ * Template tag for CSS.
+ *
+ * @param {string[]} strings
+ * @param  {...CSSResult} values
+ * @returns {CSSResult}
+ */
 export function css (strings, ...values) {
   const cssText = values.reduce(
     (acc, value, i) => acc + textFromCSSResult(value) + strings[i + 1],
@@ -55,8 +70,12 @@ export function css (strings, ...values) {
   return new CSSResult(cssText, constructionToken)
 }
 
+/**
+ * @param {CSSResult|number} value
+ */
 function textFromCSSResult (value) {
   if (value instanceof CSSResult) {
+    // @ts-ignore
     return value.cssText
   } else if (typeof value === 'number') {
     return value

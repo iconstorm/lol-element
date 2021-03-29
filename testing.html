@@ -8,7 +8,7 @@
 </head>
 <body>
   <script type="module">
-    import { LolElement, define, html, css } from './src/main.js'
+    import { LolElement, html, css } from './src/lol-element.js'
 
     const template = ({ name, handleClick }) => html`
       <p>
@@ -23,20 +23,20 @@
       mark { color: var(--color, lime); }
     `
 
-    const definition = {
-      name: 'a-test',
-      attributes: ['name'],
-      template,
-      styles
-    }
-
     class Hello extends LolElement {
+      static definition = {
+        name: 'a-test',
+        attributes: ['name'],
+        template,
+        styles
+      }
+
       handleClick () {
         console.log(this.name)
       }
     }
 
-    define(Hello, definition)
+    LolElement.define(Hello)
   </script>
 
   <a-test name="Pear" style="--color: red"></a-test>
