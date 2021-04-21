@@ -6,7 +6,8 @@
   },
   "scripts": {
     "start": "servor . testing.html --reload",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "test": "servor . test.html --reload"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.10",
@@ -16,6 +17,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
+    "qunit": "^2.14.1",
     "servor": "^4.0.2"
   },
   "babel": {
