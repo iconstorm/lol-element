@@ -40,6 +40,20 @@ export class LolElementBase extends HTMLElement {
     this.setup()
   }
 
+  /**
+   * Efficiently append some HTML.
+   * Useful when not using a rendering library (like `lit-html`).
+   *
+   * @param {string} html - A string of HTML to put in template.innerHTML
+   */
+  $append (html) {
+    const template = document.createElement('template')
+    template.innerHTML = html
+    /** @type HTMLTemplateElement */
+    this._renderRoot.append(template.content.cloneNode(true))
+    this._templateElement = template
+  }
+
   /** Called at the end of `constructor`. */
   setup () { }
   /** Called at the end of `connectedCallback`. */
