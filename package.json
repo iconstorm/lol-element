@@ -5,7 +5,7 @@
     "lit-html": "^1.3.0"
   },
   "scripts": {
-    "start": "servor . testing.html --reload",
+    "start": "servor . example.html --reload",
     "lint": "eslint src/**/*.js",
     "test": "servor . test.html --reload"
   },

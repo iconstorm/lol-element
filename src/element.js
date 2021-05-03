@@ -1,51 +1,48 @@
 // @ts-check
 
-/**
- * @typedef {object} ElementDefinitionObject
- * @property {string} name
- * @property {string[]|AttributeConfig[]} [attributes]
- * @property {(host: object) => object|string} [template]
- * @property {import('./css.js').CSSResult} [styles]
- * @property {ShadowRootInit} [shadowOptions]
- */
-
-const identity = (/** @type any */x) => x
-
-class AttributeConfig {
-  /**
-  * @param {object} config
-  * @param {string} config.name - The name of the attribute
-  * @param {boolean} [config.reflect=true] - Whether the attribute should be reflected in a property
-  * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean attriute
-  * @param {(value: string|null) => any} [config.get]
-  * @param {(value: any) => string} [config.set]
-  */
-  constructor ({ name, reflect = true, boolean = false, get = identity, set = identity }) {
-    this.name = name
-    this.reflect = reflect
-    this.boolean = boolean
-    this.get = get
-    this.set = set
-    this.propertyName = camelCase(name)
-    this.callbackName = `${camelCase(name)}Changed`
-  }
-}
-
 export class LolElementBase extends HTMLElement {
+  /**
+   * @returns {ShadowRootInit|null}
+   */
+  static get shadowOptions () {
+    return { mode: 'open' }
+  }
+
+  /**
+   * @returns {import('./css').CSSResult|null}
+   */
+  static get styles () {
+    return null
+  }
+
+  /**
+   * @returns {AttributeConfig[]}
+   */
+  static get attributes () {
+    return []
+  }
+
+  static get observedAttributes () {
+    const attributes = defineGettersAndSettersForAttributes(
+      this.prototype,
+      this.attributes
+    )
+    return attributes.map(x => x.name)
+  }
+
   constructor () {
     super()
-    const { shadowOptions } = this.definition
+    // @ts-ignore
+    const { shadowOptions } = this.constructor
     if (shadowOptions !== null) this.attachShadow(shadowOptions)
     this._renderRoot = this.shadowRoot || this
     this.setup()
   }
 
-  /** Called at the end of `constructor`. */
   setup () { }
-  /** Called at the end of `connectedCallback`. */
   connected () { }
-  /** Called at `disconnectedCallback`. */
   disconnected () { }
+
   /**
    * Called on every `attributeChangedCallback`.
    *
@@ -71,7 +68,7 @@ export class LolElementBase extends HTMLElement {
    * @param {string} newValue
    */
   attributeChangedCallback (name, oldValue, newValue) {
-    const { callbackName } = this.attributeConfigMap.get(name)
+    const callbackName = `${camelCase(name)}Changed`
     this.changed(name, oldValue, newValue)
     if (callbackName in this) {
       // @ts-ignore
@@ -89,7 +86,8 @@ export class LolElementBase extends HTMLElement {
    * styles are added and they stay forever
    */
   _adoptStyles () {
-    const { styles, name } = this.definition
+    // @ts-ignore
+    const { name, styles } = this.constructor
     if (styles == null) return
     const styleSheet = styles.styleSheet
 
@@ -113,21 +111,25 @@ export class LolElementBase extends HTMLElement {
     if (this.shadowRoot) {
       this.shadowRoot.appendChild(styleTag)
     } else {
-      styleTag.id = `for-custom-element-${name}`
+      styleTag.setAttribute('data-custom-element', name)
       if (document.getElementById(styleTag.id) !== null) return
       document.head.appendChild(styleTag)
     }
   }
 
   /**
-   * Execute the template function and call this#_render.
+   * Execute the template method and call `_render`.
    */
   _update () {
     if (!this.isConnected) return
-    const { template } = this.definition
-    if (template == null) return
-    const result = typeof template === 'function' ? template(this) : template
-    this._render(result)
+    this._render(this.template(this))
+  }
+
+  /**
+   * @param {Object} host
+   */
+  template (host) {
+    return null
   }
 
   /**
@@ -158,72 +160,37 @@ export class LolElementBase extends HTMLElement {
     })
     this.dispatchEvent(event)
   }
+}
 
+const identity = (/** @type any */x) => x
+
+class AttributeConfig {
   /**
-   * @returns {ElementDefinitionObject}
-   */
-  get definition () {
-    throw new Error('No `definition` property defined.')
-  }
-
-  /**
-   * @returns {Map<string, AttributeConfig>}
-   */
-  get attributeConfigMap () {
-    throw new Error('No `attributeConfigMap` property defined.')
-  }
-
-  /**
-   * @param {Function} Component - The custom element class
-   */
-  static define (Component) {
-    /** @type ElementDefinitionObject */
-    // @ts-ignore
-    const definition = Component.definition
-
-    if (!definition) {
-      throw new Error(`'definition' object missing: ${Component.name}.`)
-    }
-    if (!definition.name) {
-      throw new Error(`A name for the custom element is missing in the 'definition' object: ${Component.name}.`)
-    }
-    if (typeof definition.shadowOptions === 'undefined') {
-      definition.shadowOptions = { mode: 'open' }
-    }
-
-    const attributes = defineGettersAndSettersForAttributes(
-      Component,
-      definition.attributes || []
-    )
-    Object.defineProperty(Component, 'observedAttributes', {
-      get () { return attributes.map(x => x.name) }
-    })
-    Object.defineProperties(Component.prototype, {
-      definition: {
-        enumerable: false,
-        get () { return definition }
-      },
-      attributeConfigMap: {
-        enumerable: false,
-        get () {
-          return attributes.reduce((map, x) => map.set(x.name, x), new Map())
-        }
-      }
-    })
-
-    // @ts-ignore
-    customElements.define(definition.name, Component)
+  * @param {object} config
+  * @param {string} config.name - The name of the attribute
+  * @param {boolean} [config.reflect=true] - Whether the attribute should be reflected in a property
+  * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean attriute
+  * @param {(value: string|null) => any} [config.get]
+  * @param {(value: any) => string} [config.set]
+  */
+  constructor ({ name, reflect = true, boolean = false, get = identity, set = identity }) {
+    this.name = name
+    this.reflect = reflect
+    this.boolean = boolean
+    this.get = get
+    this.set = set
+    this.propertyName = camelCase(name)
   }
 }
 
 /**
  * Defines getters/setters properties for observed attributes.
  *
- * @param {Function} Component
+ * @param {Object} proto
  * @param {Array<string|AttributeConfig>} attributes
  * @returns AttributeConfig[]
  */
-function defineGettersAndSettersForAttributes (Component, attributes) {
+function defineGettersAndSettersForAttributes (proto, attributes) {
   const normalized = attributes.map(
     nameOrConfig => new AttributeConfig(typeof nameOrConfig === 'string' ? { name: nameOrConfig } : nameOrConfig)
   )
@@ -231,7 +198,7 @@ function defineGettersAndSettersForAttributes (Component, attributes) {
   normalized.forEach(config => {
     if (config.reflect === false) return
     const { name, propertyName, boolean, get, set } = config
-    const current = Object.getOwnPropertyDescriptor(Component.prototype, propertyName)
+    const current = Object.getOwnPropertyDescriptor(proto, propertyName)
 
     // getter/setter already exist, do nothing
     if (current && current.get && current.set) return
@@ -260,7 +227,7 @@ function defineGettersAndSettersForAttributes (Component, attributes) {
     if (current && current.get) descriptor.get = current.get
     if (current && current.set) descriptor.set = current.set
 
-    Object.defineProperty(Component.prototype, propertyName, descriptor)
+    Object.defineProperty(proto, propertyName, descriptor)
   })
 
   return normalized

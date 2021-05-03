@@ -10,25 +10,26 @@
   <script type="module">
     import { LolElement, html, css } from './src/lol-element.js'
 
-    const template = ({ name, handleClick }) => html`
-      <p>
-        <mark>Hello, ${name}</mark> 
-        <button @click=${handleClick}>Log</button>
-      </p>
-    `
-
-    const styles = css`
-      :host { --color: lime; }
-      p { font-size: 150%; }
-      mark { color: var(--color, lime); }
-    `
-
     class Hello extends LolElement {
-      static definition = {
-        name: 'a-test',
-        attributes: ['name'],
-        template,
-        styles
+      static attributes = [
+        'name'
+      ]
+
+      static get styles () {
+        return css`
+          :host { --color: lime; }
+          p { font-size: 150%; }
+          mark { color: var(--color, lime); }
+        `
+      }
+
+      template () {
+        return html`
+          <p>
+            <mark>Hello, ${this.name}</mark> 
+            <button @click=${this.handleClick}>Log</button>
+          </p>
+        `
       }
 
       handleClick () {
@@ -36,7 +37,7 @@
       }
     }
 
-    LolElement.define(Hello)
+    customElements.define('a-test', Hello)
   </script>
 
   <a-test name="Pear" style="--color: red"></a-test>
