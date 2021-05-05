@@ -1,6 +1,8 @@
 // @ts-check
 
 export class LolElementBase extends HTMLElement {
+  /* "public" API */
+
   /**
    * @returns {ShadowRootInit|null}
    */
@@ -16,31 +18,23 @@ export class LolElementBase extends HTMLElement {
   }
 
   /**
-   * @returns {AttributeConfig[]}
+   * @returns {Array<AttributeConfig|string>}
    */
   static get attributes () {
     return []
   }
 
-  static get observedAttributes () {
-    const attributes = defineGettersAndSettersForAttributes(
-      this.prototype,
-      this.attributes
-    )
-    return attributes.map(x => x.name)
-  }
-
-  constructor () {
-    super()
-    // @ts-ignore
-    const { shadowOptions } = this.constructor
-    if (shadowOptions !== null) this.attachShadow(shadowOptions)
-    this._renderRoot = this.shadowRoot || this
-    this.setup()
+  /**
+   * @param {Object} host
+   */
+  template (host) {
+    return null
   }
 
   setup () { }
+
   connected () { }
+
   disconnected () { }
 
   /**
@@ -51,6 +45,45 @@ export class LolElementBase extends HTMLElement {
    * @param {string} newValue
    */
   changed (name, oldValue, newValue) { }
+
+  /**
+   * Helper to fire a custom event.
+   *
+   * @param {string} eventName - The name of the custom event
+   * @param {any} detail - The detail property in the event
+   * @param {CustomEventInit} options
+   */
+  emit (eventName, detail, options = {}) {
+    const defaults = {
+      bubbles: true,
+      cancelable: true
+    }
+    const event = new CustomEvent(eventName, {
+      detail: detail,
+      ...defaults,
+      ...options
+    })
+    this.dispatchEvent(event)
+  }
+
+  /* "private" stuff */
+
+  constructor () {
+    super()
+    // @ts-ignore
+    const { shadowOptions } = this.constructor
+    if (shadowOptions !== null) this.attachShadow(shadowOptions)
+    this._renderRoot = this.shadowRoot || this
+    this.setup()
+  }
+
+  static get observedAttributes () {
+    const attributes = defineGettersAndSettersForAttributes(
+      this.prototype,
+      this.attributes
+    )
+    return attributes.map(x => x.name)
+  }
 
   connectedCallback () {
     this._adoptStyles()
@@ -126,39 +159,12 @@ export class LolElementBase extends HTMLElement {
   }
 
   /**
-   * @param {Object} host
-   */
-  template (host) {
-    return null
-  }
-
-  /**
    * Update the DOM.
    *
    * @param {object|string} templateResult - The output from the template function
    */
   _render (templateResult) {
     throw new Error('The _render method is not defined.')
-  }
-
-  /**
-   * Helper to fire a custom event.
-   *
-   * @param {string} eventName - The name of the custom event
-   * @param {any} detail - The detail property in the event
-   * @param {CustomEventInit} options
-   */
-  emit (eventName, detail, options = {}) {
-    const defaults = {
-      bubbles: true,
-      cancelable: true
-    }
-    const event = new CustomEvent(eventName, {
-      detail: detail,
-      ...defaults,
-      ...options
-    })
-    this.dispatchEvent(event)
   }
 }
 
