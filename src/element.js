@@ -176,15 +176,15 @@ class AttributeConfig {
   * @param {string} config.name - The name of the attribute
   * @param {boolean} [config.reflect=true] - Whether the attribute should be reflected in a property
   * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean attriute
-  * @param {(value: string|null) => any} [config.get]
-  * @param {(value: any) => string} [config.set]
+  * @param {(value: string|null) => any} [config.read]
+  * @param {(value: any) => string} [config.write]
   */
-  constructor ({ name, reflect = true, boolean = false, get = identity, set = identity }) {
+  constructor ({ name, reflect = true, boolean = false, read = identity, write = identity }) {
     this.name = name
     this.reflect = reflect
     this.boolean = boolean
-    this.get = get
-    this.set = set
+    this.read = read
+    this.write = write
     this.propertyName = camelCase(name)
   }
 }
@@ -203,7 +203,7 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
 
   normalized.forEach(config => {
     if (config.reflect === false) return
-    const { name, propertyName, boolean, get, set } = config
+    const { name, propertyName, boolean, read, write } = config
     const current = Object.getOwnPropertyDescriptor(proto, propertyName)
 
     // getter/setter already exist, do nothing
@@ -217,14 +217,14 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
         if (boolean) {
           return this.hasAttribute(name)
         }
-        return get(this.getAttribute(name))
+        return read(this.getAttribute(name))
       },
       /** @this HTMLElement */
       set: function (/** @type any */value) {
         if (boolean) {
           value ? this.setAttribute(name, '') : this.removeAttribute(name)
         } else {
-          this.setAttribute(name, set(value))
+          this.setAttribute(name, write(value))
         }
       }
     }
