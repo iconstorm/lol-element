@@ -1,5 +1,7 @@
 /* global QUnit */
 
+/* COMPLETELY USELESS NOW, NEEDS A REWRITE */
+
 import { LolElement, html } from './lol-element.js'
 
 // A random name for elements to avoid collisions
