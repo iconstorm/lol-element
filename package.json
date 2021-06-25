@@ -1,11 +1,18 @@
 {
   "name": "lol-element",
   "private": true,
+  "version": "1.0.0-beta.1",
+  "description": "A base class for creating Web Components like you know what you're doing",
   "dependencies": {
-    "lit-html": "^1.3.0"
+    "uhtml": "^2.7.5"
+  },
+  "peerDependencies": {
+    "htm": "^3",
+    "lit-html": ">= 1 <3",
+    "preact": "^10"
   },
   "scripts": {
-    "start": "servor . example.html --reload",
+    "start": "vite serve example",
     "lint": "eslint src/**/*.js",
     "test": "servor . test.html --reload"
   },
@@ -18,7 +25,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "qunit": "^2.14.1",
-    "servor": "^4.0.2"
+    "servor": "^4.0.2",
+    "vite": "^2.3.8"
   },
   "babel": {
     "plugins": [
