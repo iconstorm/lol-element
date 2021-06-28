@@ -160,13 +160,22 @@ class AttributeConfig {
   * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean attriute
   * @param {(value: string|null) => any} [config.read]
   * @param {(value: any) => string} [config.write]
+  * @param {any} config.defaultValue
   */
-  constructor ({ name, reflect = true, boolean = false, read = identity, write = identity }) {
+  constructor ({
+    name,
+    reflect = true,
+    boolean = false,
+    read = identity,
+    write = identity,
+    defaultValue = undefined
+  }) {
     this.name = name
     this.reflect = reflect
     this.boolean = boolean
     this.read = read
     this.write = write
+    this.defaultValue = defaultValue
     this.propertyName = camelCase(name)
   }
 }
@@ -185,7 +194,7 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
 
   normalized.forEach(config => {
     if (config.reflect === false) return
-    const { name, propertyName, boolean, read, write } = config
+    const { name, propertyName, boolean, read, write, defaultValue } = config
     const current = Object.getOwnPropertyDescriptor(proto, propertyName)
 
     // getter/setter already exist, do nothing
@@ -198,6 +207,9 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
       get: function () {
         if (boolean) {
           return this.hasAttribute(name)
+        }
+        if (this.getAttribute(name) == null && defaultValue !== undefined) {
+          return defaultValue
         }
         return read(this.getAttribute(name))
       },
