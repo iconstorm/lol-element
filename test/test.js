@@ -2,7 +2,7 @@
 
 /* COMPLETELY USELESS NOW, NEEDS A REWRITE */
 
-import { LolElement, html } from './lol-element.js'
+import { LOL, html } from '../src/lol.js'
 
 // A random name for elements to avoid collisions
 const getRandomElementName = () => `a-${Date.now()}-${Math.random().toString().substr(2)}`
@@ -10,7 +10,7 @@ const getRandomElementName = () => `a-${Date.now()}-${Math.random().toString().s
 /*
   - [x] class with no static `definition` throws
   - [x] `definition` with no `name` throws
-  - [x] LolElement.define actual defines the element
+  - [x] LOL.define actual defines the element
   - [x] html renders w/ shadow DOM
   - [x] template as string works
   - [-] no template also works
@@ -28,16 +28,16 @@ const getRandomElementName = () => `a-${Date.now()}-${Math.random().toString().s
   - [ ] #definition is accessible
 */
 
-QUnit.module('LolElement.define', () => {
+QUnit.module('LOL.define', () => {
   const name = getRandomElementName()
 
-  class WithNoDef extends LolElement {}
+  class WithNoDef extends LOL {}
 
-  class WithNoName extends LolElement {
+  class WithNoName extends LOL {
     static definition = {}
   }
 
-  class NameOnly extends LolElement {
+  class NameOnly extends LOL {
     static definition = {
       name: name
     }
@@ -45,18 +45,18 @@ QUnit.module('LolElement.define', () => {
 
   QUnit.test('throws with no `definition` object', assert => {
     assert.throws(() => {
-      LolElement.define(WithNoDef)
+      LOL.define(WithNoDef)
     },
     /'definition' object missing/)
   })
   QUnit.test('throws with no `definition.name`', assert => {
     assert.throws(() => {
-      LolElement.define(WithNoName)
+      LOL.define(WithNoName)
     },
     /name for the custom element is missing/)
   })
   QUnit.test('`definition.name` is enough', assert => {
-    LolElement.define(NameOnly)
+    LOL.define(NameOnly)
     assert.ok(customElements.get(name), 'and element is defined')
   })
 })
@@ -65,7 +65,7 @@ QUnit.module('Definition.template', ({ before, after }) => {
   let el
   const name = getRandomElementName()
 
-  class WithTemplateFn extends LolElement {
+  class WithTemplateFn extends LOL {
     static definition = {
       name: name,
       template: (host) => html`
@@ -80,7 +80,7 @@ QUnit.module('Definition.template', ({ before, after }) => {
   }
 
   before(() => {
-    LolElement.define(WithTemplateFn)
+    LOL.define(WithTemplateFn)
     el = document.createElement(name)
     document.body.appendChild(el)
   })
@@ -100,7 +100,7 @@ QUnit.module('Definition.template as string', ({ before, after }) => {
   let el
   const name = getRandomElementName()
 
-  class WithTemplateFn extends LolElement {
+  class WithTemplateFn extends LOL {
     static definition = {
       name: name,
       template: html`
@@ -110,7 +110,7 @@ QUnit.module('Definition.template as string', ({ before, after }) => {
   }
 
   before(() => {
-    LolElement.define(WithTemplateFn)
+    LOL.define(WithTemplateFn)
     el = document.createElement(name)
     document.body.appendChild(el)
   })
