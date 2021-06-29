@@ -1,10 +1,10 @@
 // @ts-check
 
 import { LOLElement } from './lol-element.js'
-import { render } from 'uhtml/async'
+import { render } from 'uhtml'
 
 export { css } from './lol-element.js'
-export { html, svg } from 'uhtml/async'
+export { html, svg } from 'uhtml'
 
 export class LOL extends LOLElement {
   /**

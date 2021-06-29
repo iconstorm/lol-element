@@ -12,26 +12,19 @@
     "preact": "^10"
   },
   "scripts": {
-    "start": "vite serve example",
+    "start": "vite serve examples",
     "lint": "eslint src/**/*.js",
-    "test": "servor . test.html --reload"
+    "test": "npm run lint && vite serve test"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.10",
-    "@babel/plugin-syntax-class-properties": "^7.12.13",
     "eslint": "^7.21.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "qunit": "^2.14.1",
-    "servor": "^4.0.2",
     "vite": "^2.3.8"
-  },
-  "babel": {
-    "plugins": [
-      "@babel/plugin-syntax-class-properties"
-    ]
   },
   "eslintConfig": {
     "env": {

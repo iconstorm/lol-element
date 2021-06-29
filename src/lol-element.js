@@ -154,25 +154,35 @@ const identity = (/** @type any */x) => x
 
 class AttributeConfig {
   /**
-  * @param {object} config
-  * @param {string} config.name - The name of the attribute
-  * @param {boolean} [config.reflect=true] - Whether the attribute should be reflected in a property
-  * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean attriute
-  * @param {(value: string|null) => any} [config.read]
-  * @param {(value: any) => string} [config.write]
-  */
-  constructor ({ name, reflect = true, boolean = false, read = identity, write = identity }) {
+   * @param {object} config
+   * @param {string} config.name - The name of the attribute
+   * @param {boolean} [config.reflect=true] - Whether the attribute should be reflected in a property
+   * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean type of attribute (https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started#boolean_attributes)
+   * @param {(value: string|null) => any} [config.read]
+   * @param {(value: any) => string} [config.write]
+   * @param {any} config.fallbackValue - The value returned by the property getter when the attribute is missing
+   */
+  constructor ({
+    name,
+    reflect = true,
+    boolean = false,
+    read = identity,
+    write = identity,
+    fallbackValue = undefined
+  }) {
     this.name = name
     this.reflect = reflect
     this.boolean = boolean
     this.read = read
     this.write = write
+    this.fallbackValue = fallbackValue
     this.propertyName = camelCase(name)
   }
 }
 
 /**
  * Defines getters/setters properties for observed attributes.
+ * Also return a normalized array config, so it's all AttributeConfig instances.
  *
  * @param {Object} proto
  * @param {Array<string|AttributeConfig>} attributes
@@ -185,7 +195,7 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
 
   normalized.forEach(config => {
     if (config.reflect === false) return
-    const { name, propertyName, boolean, read, write } = config
+    const { name, propertyName, boolean, read, write, fallbackValue } = config
     const current = Object.getOwnPropertyDescriptor(proto, propertyName)
 
     // getter/setter already exist, do nothing
@@ -198,6 +208,9 @@ function defineGettersAndSettersForAttributes (proto, attributes) {
       get: function () {
         if (boolean) {
           return this.hasAttribute(name)
+        }
+        if (this.getAttribute(name) == null && fallbackValue !== undefined) {
+          return fallbackValue
         }
         return read(this.getAttribute(name))
       },
