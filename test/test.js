@@ -7,18 +7,19 @@ const getRandomElementName = () => `lol-${Date.now()}-${Math.random().toString()
 
 /*
   - [x] html renders
+  - [x] getters/setters properties are defined and are camel-cased
+  - [ ] getters/setters are overwritable individually
+  - [x] reflect=false works as expected
+  - [x] boolean attributes work as expected
+  - [ ] shadowOptions get passed
   - [ ] styles get applied
   - [ ] styles are composable
-  - [ ] shadowOptions get passed
   - [ ] wo/ shadow DOM
     - [ ] html renders
     - [ ] styles get applied
   - [ ] changed callback gets called with arguments
   - [ ] {attributeName}Changed callbacks fire, returning false skips update
   - [ ] attribute changes triggers render (once)
-  - [x] getters/setters properties are defined and are camel-cased
-  - [x] reflect=false works as expected
-  - [x] boolean attributes work as expected
   - [ ] read/write work as expected
   - [ ] #emit is cool
 */
@@ -58,7 +59,7 @@ QUnit.module('static attributes', ({ before, after }) => {
       'name',
       { name: 'age', reflect: false },
       { name: 'two-words', boolean: true },
-      { name: 'secret', defaultValue: 42 },
+      { name: 'secret', fallbackValue: 42 },
       { name: 'long-attribute-name' }
     ]
 

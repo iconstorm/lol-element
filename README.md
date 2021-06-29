@@ -43,7 +43,6 @@ customElements.define('lol-hello-world', HelloWorld)
 - static `styles`
 - static `attributes`
 - `template()`
-- `render()`
 
 #### lifecycle
 - `constructor()`
@@ -52,9 +51,13 @@ customElements.define('lol-hello-world', HelloWorld)
 - `attributeChangedCallback()`
 - `changed()`
 - `{propertyName}Changed()`
+- `render()`
 
 #### helpers
 - `emit()`
+
+#### props
+- renderRoot
 
 ### template syntax
 

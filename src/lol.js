@@ -11,7 +11,6 @@ export class LOL extends LOLElement {
    * Update the DOM.
    */
   render () {
-    console.log('render', this.name)
     const templateResult = this.template(this)
     render(this.renderRoot, templateResult)
   }
