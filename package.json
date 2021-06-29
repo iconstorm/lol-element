@@ -7,21 +7,20 @@
   },
   "type": "module",
   "source": "src/lol.js",
-  "main": "./lol.cjs",
-  "module": "./lol.legacy.js",
-  "exports": "./lol.js",
-  "unpkg": "./lol.umd.js",
+  "main": "./dist/lol.cjs",
+  "module": "./dist/lol.legacy.js",
+  "exports": "./dist/lol.js",
+  "unpkg": "./dist/lol.umd.js",
   "files": [
     "src",
-    "**.js",
-    "**.cjs",
-    "**.map"
+    "dist"
   ],
   "scripts": {
     "start": "vite serve examples",
     "lint": "eslint src/**/*.js",
     "test": "npm run lint && vite serve test",
-    "build": "microbundle --external none --name lol",
+    "prebuild": "rm -fr dist",
+    "build": "microbundle --format modern,esm,cjs --no-compress --sourcemap=false && microbundle --external none --name lol --format umd",
     "prepublishOnly": "npm run build"
   },
   "author": "Arturo Castillo Delgado <ac@iconstorm.com>",
