@@ -2,7 +2,7 @@ import { LOL, html, css } from '../src/lol.js'
 
 class Clock extends LOL {
   static attributes = [
-    'refresh-rate',
+    'timeout',
     { name: 'mute', boolean: true }
   ]
 
@@ -27,7 +27,7 @@ class Clock extends LOL {
     super()
     this.interval = setInterval(() => {
       this.render()
-    }, this.refreshRate)
+    }, this.timeout)
   }
 
   connectedCallback() {

@@ -4,7 +4,7 @@
 
 TODO
 
-(hint: hide advanced stuff and/or further explanations inside "toggles" and the end of each section, à la Josh Comeau)
+(hint: hide verbose/advanced stuff and/or further explanations inside "toggles" and the end of each section, à la Josh Comeau)
 
 ---
 
