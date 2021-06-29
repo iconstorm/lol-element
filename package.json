@@ -2,6 +2,9 @@
   "name": "@iconstorm/lol-element",
   "version": "1.0.0-alpha.1",
   "description": "A base class for creating Web Components like you know what you're doing",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "source": "src/lol.js",
   "main": "./lol.cjs",
@@ -14,12 +17,12 @@
     "**.cjs",
     "**.map"
   ],
-  "types": "./lol.d.ts",
   "scripts": {
     "start": "vite serve examples",
     "lint": "eslint src/**/*.js",
     "test": "npm run lint && vite serve test",
-    "build": "microbundle --external none"
+    "build": "microbundle --external none --name lol",
+    "prepublishOnly": "npm run build"
   },
   "author": "Arturo Castillo Delgado <ac@iconstorm.com>",
   "repository": "iconstorm/lol-element",
