@@ -25,18 +25,20 @@ export class LOLElement extends HTMLElement {
   }
 
   /**
-   * @returns {string|Object|Node}
+   * @param {Object} [host]
+   * @returns {string|Object|Node} The template result
    */
-  template () {
+  template (host) {
     return null
   }
 
   /**
    * Update the DOM.
-   * 
+   *
    * @returns {void}
    */
   render () {
+    // @ts-ignore
     console.log(`The \`render\` method is not defined in ${this.name}`)
   }
 
@@ -160,7 +162,7 @@ class AttributeConfig {
    * @param {boolean} [config.boolean=false] - Whether the attribute is a boolean type of attribute (https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started#boolean_attributes)
    * @param {(value: string|null) => any} [config.read]
    * @param {(value: any) => string} [config.write]
-   * @param {any} config.fallbackValue - The value returned by the property getter when the attribute is missing
+   * @param {any} [config.fallbackValue] - The value returned by the property getter when the attribute is missing
    */
   constructor ({
     name,
