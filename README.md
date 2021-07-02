@@ -39,6 +39,8 @@ import { LOL, css, html } from 'https://unpkg.com/@iconstorm/lol-element?module'
 
 No build step or transpiling is necessary. All of this just works in the browser.
 
+Define a component:
+
 ```js
 import { LOL, html, css } from 'https://unpkg.com/@iconstorm/lol-element'
 
@@ -63,6 +65,8 @@ class HelloWorld extends LOL {
 customElements.define('lol-hello-world', HelloWorld)
 ```
 
+Use it in your markup:
+
 ```html
 <lol-hello-world with-exclamation-mark></lol-hello-world>
 ```
@@ -71,6 +75,20 @@ customElements.define('lol-hello-world', HelloWorld)
 
 ## API
 
+- [`LOL` class](#the-lol-class)
+  - [static `shadowOptions`](#static-shadowoptions-static-getter-or-property)
+  - [static `attributes`](#static-attributes-static-getter-or-property)
+  - [static `styles`](#static-styles-static-getter-or-property)
+  - [`template()`](#template-method)
+  - [`changed()`](#changed-method)
+  - [`{propertyName}Changed()`](#propertynamechanged-method)
+  - [`emit()`](#emit-method)
+  - [`render()`](#render-method)
+  - [`renderRoot`](#renderroot-property)
+- [Lifecycle callbacks](#lifecycle-callbacks)
+- [Template syntax](#template-syntax)
+- [Named exports](#named-exports)
+
 ### The `LOL` class
 
 #### static `shadowOptions` _static (getter or property)_
@@ -78,6 +96,8 @@ customElements.define('lol-hello-world', HelloWorld)
 Define the [Shadow DOM options](https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow#syntax) being passed to the `attachShadow()` call.
 
 Defaults to `{ mode: 'open' }`. Use `null` to not use Shadow DOM.
+
+---
 
 #### static `attributes` _static (getter or property)_
 
@@ -100,6 +120,8 @@ An attribute being reflected means that for a given `foo-bar` attribute, a `fooB
   Attributes live in HTML, properties belong in JavaScript objects. If the different is not clear, [stack overflow is your friend](https://stackoverflow.com/a/6004028). This can create some confusion. This [post by Rich Harris](https://dev.to/richharris/why-i-don-t-use-web-components-2cia) can be interesting (scroll down to part 6).
 </details>
 
+---
+
 #### static `styles` _static (getter or property)_
 
 Define the styles for the component with CSS. The ` css`` ` template literal tag must be used.
@@ -121,6 +143,8 @@ Define the styles for the component with CSS. The ` css`` ` template literal tag
   }
   ```
 </details>
+
+---
 
 #### `template()` _method_
 
@@ -147,6 +171,8 @@ Parameters:
   ```
 </details>
 
+---
+
 #### `changed()` _method_
 
 Fires every time an attribute is added, removed, or changed. This is only an alias for `attributeChangedCallback` for the convenience of avoiding `super.attributeChangedCallback()`.
@@ -156,6 +182,8 @@ Parameters:
 - `oldValue` string
 - `newValue` string
 
+---
+
 #### `{propertyName}Changed()` _method_
 
 An individual callback for every observed attribute, when implemented. For example, every time the `foo-bar` attribute changes, if there's a `fooBarChanged()` method defined, it will be called.
@@ -163,6 +191,8 @@ An individual callback for every observed attribute, when implemented. For examp
 Parameters:
 - `oldValue` string
 - `newValue` string
+
+---
 
 #### `emit()` _method_
 
@@ -173,9 +203,13 @@ Parameters:
 - `detail` any: The thing being emitted, available in `event.detail`
 - `options` object: any other options for the event, defaults to `{ bubbles: true, cancelable: true }`
 
+---
+
 #### `render()` _method_
 
 Call this method to trigger a DOM update. You shouldn't need to implement this method.
+
+---
 
 #### `renderRoot` _property_ 
 
