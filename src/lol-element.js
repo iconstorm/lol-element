@@ -1,5 +1,7 @@
 // @ts-check
 
+const p = Promise.resolve()
+
 export class LOLElement extends HTMLElement {
   /* "public" API */
 
@@ -71,6 +73,10 @@ export class LOLElement extends HTMLElement {
     this.dispatchEvent(event)
   }
 
+  tick (fn = () => {}) {
+    return p.then(fn)
+  }
+
   /* "private" stuff */
 
   constructor () {
@@ -91,8 +97,9 @@ export class LOLElement extends HTMLElement {
   }
 
   connectedCallback () {
-    this.adoptStyles()
+    // Order is important
     this.render()
+    this.adoptStyles()
   }
 
   /**
