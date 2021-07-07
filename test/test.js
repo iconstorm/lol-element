@@ -1,6 +1,6 @@
 /* global QUnit */
 
-import { LOL, html } from '../dist/lol.js'
+import { LOL, html, css } from '../src/lol.js'
 
 // A random name for elements to avoid collisions
 const getRandomElementName = () => `lol-${Date.now()}-${Math.random().toString().substr(2)}`
@@ -12,16 +12,18 @@ const getRandomElementName = () => `lol-${Date.now()}-${Math.random().toString()
   - [x] reflect=false works as expected
   - [x] boolean attributes work as expected
   - [ ] shadowOptions get passed
-  - [ ] styles get applied
+  - [x] styles get applied
   - [ ] styles are composable
   - [ ] wo/ shadow DOM
     - [ ] html renders
-    - [ ] styles get applied
+    - [x] styles get applied
   - [ ] changed callback gets called with arguments
   - [ ] {attributeName}Changed callbacks fire, returning false skips update
   - [ ] attribute changes triggers render (once)
   - [ ] read/write work as expected
   - [ ] #emit is cool
+
+  - [ ] test other flavors
 */
 
 QUnit.module('template()', ({ before, after }) => {
@@ -47,6 +49,7 @@ QUnit.module('template()', ({ before, after }) => {
   QUnit.test('renders markup', assert => {
     const h1 = el.shadowRoot.querySelector('h1')
     assert.strictEqual(h1.textContent, 'Thanks')
+    assert.equal(el.shadowRoot.querySelectorAll('h1').length, 1)
   })
 })
 
@@ -111,5 +114,71 @@ QUnit.module('static attributes', ({ before, after }) => {
     const h1 = el.shadowRoot.querySelector('h1')
     el.longAttributeName = 'beep'
     assert.equal(h1.className, 'beep')
+  })
+})
+
+QUnit.module('static styles()', ({ before, after }) => {
+  let el
+  const name = getRandomElementName()
+
+  class Please extends LOL {
+    static get styles () {
+      return css`h1 { color: tomato }`
+    }
+
+    template () {
+      return html`<h1>Please</h1>`
+    }
+  }
+
+  before(() => {
+    customElements.define(name, Please)
+    el = document.createElement(name)
+    document.body.appendChild(el)
+  })
+
+  after(() => {
+    document.body.removeChild(el)
+  })
+
+  QUnit.test('get applied', assert => {
+    const h1 = el.shadowRoot.querySelector('h1')
+    const styles = getComputedStyle(h1)
+    assert.strictEqual(styles.color, 'rgb(255, 99, 71)')
+  })
+})
+
+QUnit.module('static styles() w/o shadow DOM', ({ before, after }) => {
+  let el
+  const name = getRandomElementName()
+
+  class Please extends LOL {
+    static get shadowOptions () {
+      return null
+    }
+
+    static get styles () {
+      return css`h1 { color: tomato }`
+    }
+
+    template () {
+      return html`<h1>Please</h1>`
+    }
+  }
+
+  before(() => {
+    customElements.define(name, Please)
+    el = document.createElement(name)
+    document.body.appendChild(el)
+  })
+
+  after(() => {
+    document.body.removeChild(el)
+  })
+
+  QUnit.test('get applied', assert => {
+    const h1 = el.querySelector('h1')
+    const styles = getComputedStyle(h1)
+    assert.strictEqual(styles.color, 'rgb(255, 99, 71)')
   })
 })
