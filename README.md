@@ -4,6 +4,18 @@
 
 A JavaScript base class for creating Web Components like you know what you're doing.
 
+## Goals
+
+🧬 **tiny API**: if you need to invest time in learning something, let it be how custom elements work and not ephemeral library APIs.
+
+😵‍💫 **just enough abstractions**: custom elements can be cool, but they're definitely not fancy, it is what it is.
+
+🫒 **small and lightweight**: if you need to debug, start confidently with your own code, it's probably not lol.
+
+🕳 **no build step necessary**: if you enjoy spending hours debugging a cryptic compile error in the terminal and hunting for that buggy dependency, we don't.
+
+🍭 **a list with random emoji in the README**: checked.
+
 ## Install
 
 With npm (or similar):
