@@ -1,6 +1,6 @@
 {
   "name": "@iconstorm/lol-element",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "A base class for creating Web Components like you know what you're doing",
   "publishConfig": {
     "access": "public"
