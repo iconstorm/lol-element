@@ -30,12 +30,12 @@ class Clock extends LOL {
     }, this.timeout)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     console.log('🍩')
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     if (this.interval) {
       clearInterval(this.interval)
       this.interval = null
