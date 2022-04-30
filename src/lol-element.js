@@ -98,12 +98,6 @@ export class LOLElement extends HTMLElement {
     return attributes.map(x => x.name)
   }
 
-  connectedCallback () {
-    // Order is important
-    this.render()
-    this.adoptStyles()
-  }
-
   /**
    * @param {string} name - The name of the attribute that changed
    * @param {string} oldValue

@@ -1,4 +1,4 @@
-import { LOL, html, css } from '../src/lol.js'
+import { LOL, html, css } from '../src/uhtml/lol.js'
 
 class Clock extends LOL {
   static attributes = [

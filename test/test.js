@@ -1,6 +1,6 @@
 /* global QUnit */
 
-import { LOL, html, css } from '../src/lol.js'
+import { LOL, html, css } from '../src/uhtml/lol.js'
 
 // A random name for elements to avoid collisions
 const getRandomElementName = () => `lol-${Date.now()}-${Math.random().toString().substr(2)}`
