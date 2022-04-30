@@ -83,7 +83,9 @@ export class LOLElement extends HTMLElement {
     super()
     // @ts-ignore
     const { shadowOptions } = this.constructor
-    if (shadowOptions !== null) this.attachShadow(shadowOptions)
+    if (shadowOptions !== null && this.shadowRoot == null) {
+      this.attachShadow(shadowOptions)
+    }
     /** @type {HTMLElement|ShadowRoot} */
     this.renderRoot = this.shadowRoot || this
   }
