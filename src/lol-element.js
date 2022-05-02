@@ -83,6 +83,10 @@ export class LOLElement extends HTMLElement {
     super()
     // @ts-ignore
     const { shadowOptions } = this.constructor
+    // Regarding `this.shadowRoot == null`:
+    // "A Custom Element being upgraded from HTML that includes a Declarative Shadow Root
+    // will already have that shadow root attached."
+    // https://web.dev/declarative-shadow-dom/#hydration
     if (shadowOptions !== null && this.shadowRoot == null) {
       this.attachShadow(shadowOptions)
     }
