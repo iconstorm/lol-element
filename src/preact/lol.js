@@ -10,6 +10,15 @@ export const svg = html
 
 export class LOL extends LOLElement {
   /**
+   * First render.
+   * Order is important: adoptStyles() must be called AFTER render()
+   */
+  connectedCallback () {
+    this.render()
+    this.adoptStyles()
+  }
+
+  /**
    * Update the DOM.
    */
   render () {
