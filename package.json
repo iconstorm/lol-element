@@ -6,22 +6,23 @@
     "access": "public"
   },
   "type": "module",
-  "source": "src/lol.js",
-  "main": "./dist/lol.cjs",
-  "module": "./dist/lol.legacy.js",
-  "exports": "./dist/lol.js",
-  "unpkg": "./dist/lol.umd.js",
+  "main": "./src/lol-element.js",
+  "exports": {
+    ".": "./src/lol-element.js",
+    "./preact": "./src/preact/lol.js",
+    "./preact/*": "./src/preact/*.js",
+    "./uhtml": "./src/uhtml/lol.js",
+    "./uhtml/*": "./src/uhtml/*.js",
+    "./lit-html": "./src/lit-html/lol.js",
+    "./lit-html/*": "./src/lit-html/*.js"
+  },
   "files": [
-    "src",
-    "dist"
+    "src"
   ],
   "scripts": {
     "start": "vite serve examples",
     "lint": "eslint src/**/*.js",
-    "test": "npm run lint && vite serve test",
-    "prebuild": "rm -fr dist",
-    "build": "microbundle --format modern,esm,cjs --no-compress --sourcemap=false && microbundle --external none --name lol --format umd",
-    "prepublishOnly": "npm run build"
+    "test": "npm run lint && vite serve test"
   },
   "author": "Arturo Castillo Delgado <ac@iconstorm.com>",
   "repository": "iconstorm/lol-element",
@@ -39,7 +40,6 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
-    "microbundle": "^0.13.3",
     "qunit": "^2.14.1",
     "vite": "^2.3.8"
   },

@@ -146,7 +146,7 @@ export class LOLElement extends HTMLElement {
       return
     }
 
-    // No support
+    // No support for Constructable Stylesheets
     const styleTag = document.createElement('style')
     styleTag.textContent = styles.toString()
     if (this.shadowRoot) {
