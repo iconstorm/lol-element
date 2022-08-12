@@ -1,4 +1,4 @@
-import { LOL, html, css } from '../src/lol.js'
+import { LOL, html, css } from '../src/uhtml/lol.js'
 
 class Clock extends LOL {
   static attributes = [
@@ -30,12 +30,12 @@ class Clock extends LOL {
     }, this.timeout)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     console.log('🍩')
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     if (this.interval) {
       clearInterval(this.interval)
       this.interval = null

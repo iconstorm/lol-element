@@ -83,7 +83,13 @@ export class LOLElement extends HTMLElement {
     super()
     // @ts-ignore
     const { shadowOptions } = this.constructor
-    if (shadowOptions !== null) this.attachShadow(shadowOptions)
+    // Regarding `this.shadowRoot == null`:
+    // "A Custom Element being upgraded from HTML that includes a Declarative Shadow Root
+    // will already have that shadow root attached."
+    // https://web.dev/declarative-shadow-dom/#hydration
+    if (shadowOptions !== null && this.shadowRoot == null) {
+      this.attachShadow(shadowOptions)
+    }
     /** @type {HTMLElement|ShadowRoot} */
     this.renderRoot = this.shadowRoot || this
   }
@@ -94,12 +100,6 @@ export class LOLElement extends HTMLElement {
       this.attributes
     )
     return attributes.map(x => x.name)
-  }
-
-  connectedCallback () {
-    // Order is important
-    this.render()
-    this.adoptStyles()
   }
 
   /**
@@ -146,7 +146,7 @@ export class LOLElement extends HTMLElement {
       return
     }
 
-    // No support
+    // No support for Constructable Stylesheets
     const styleTag = document.createElement('style')
     styleTag.textContent = styles.toString()
     if (this.shadowRoot) {
